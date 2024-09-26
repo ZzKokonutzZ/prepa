@@ -7,6 +7,7 @@ int exchange_int(int *x,int *y)
     int z=*x;
     *x=*y;
     *y=z;
+    return(0);
 }
 
 //exo 2
@@ -15,6 +16,7 @@ int exchange_first(int *tab_p)
     int holder=tab_p[0];
     tab_p[0]=tab_p[1];
     tab_p[1]=holder;
+    return(0);
 }
 
 //exo 3
@@ -23,6 +25,7 @@ int exchange_last(int *tab_p, int size)
     int holder=tab_p[0];
     tab_p[0]=tab_p[size-1];
     tab_p[size-1]=holder;
+    return(0);
 }
 
 //exo 4
@@ -57,6 +60,26 @@ int tab_switch(int *tab_p, int a, int b)
     int holder=tab_p[a];
     tab_p[a]=tab_p[b];
     tab_p[b]=holder;
+    return(0);
+}
+int bubble_sort(int *tab_p, int size)
+{
+    int sorted=0;
+    while ( sorted==0 )
+    {
+        int test=0;
+        for(int i=0;i<size-1;i+=1)
+        {
+            if (tab_p[i]>tab_p[i+1]) 
+            {
+                tab_switch(tab_p,i,i+1);
+                test=1;
+            }
+
+        }
+        if (test==0) sorted=1;
+    }
+    return(0);
 }
 
 
@@ -92,7 +115,16 @@ int main()
     printf("nobre d'occurences de 4 dans tab : %d \n",nb_a(tab_p,5,4));
     printf("nobre d'occurences de 7 dans tab : %d \n",nb_a(tab_p,5,7));
     
-
+    printf("exo 6 \n");
+    for (int i=0;i<5;i+=1)
+    {
+        tab[i]=5-i;
+    }
+    bubble_sort(tab_p,5);
+    for (int i=0;i<5;i+=1)
+    {
+        printf("%d \n",tab[i]);
+    }
 
     exit(0);
 }
