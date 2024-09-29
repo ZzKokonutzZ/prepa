@@ -82,6 +82,48 @@ int bubble_sort(int *tab_p, int size)
     return(0);
 }
 
+//exo 7
+int *max_tab2(int **tab_pp, int l, int c)
+{
+    int m=0;
+    int *pos=malloc(sizeof(int[2]));
+    pos[0]=0;
+    pos[1]=0;
+    for (int i=0;i<l;i+=1)
+    {
+        for (int ii=0;ii<c;ii+=1)
+        {
+            if (tab_pp[i][ii]>m)
+            {
+                m=tab_pp[i][ii];
+                pos[0]=i;
+                pos[1]=ii;
+            }
+        }
+    }
+    return(pos);
+}
+
+//exo 8
+int diy_strlen(char string[])
+{
+    int test=0;
+    int len=0;
+    int i=0;
+    while (test==0)
+    {
+        if(string[i]=='\0')
+        {
+            test=1;
+        }
+        else
+        {
+            len+=1;
+            i+=1;
+        }
+    }
+    return(len);
+}
 
 int main()
 {
@@ -120,11 +162,28 @@ int main()
     {
         tab[i]=5-i;
     }
+
+    for (int i=0;i<5;i+=1)
+    {
+        printf("%d \n",tab[i]);
+    }
+
     bubble_sort(tab_p,5);
     for (int i=0;i<5;i+=1)
     {
         printf("%d \n",tab[i]);
     }
 
+    printf("exo 7 \n");
+    int tab2[3][3]={{1,2,3},{4,10,6},{7,8,10}};
+    int *tab2_p[3]={tab2[0],tab2[1],tab2[2]};
+    int *pos=max_tab2(tab2_p,3,3);
+    printf("{%d,%d} \n",pos[0],pos[1]);
+    free(pos);
+
+    printf("exo 8 \n");
+    printf("%d",diy_strlen("Hello World"));
+
+    printf("%c",(char) 66 );
     exit(0);
 }
