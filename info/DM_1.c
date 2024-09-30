@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+
 //exo 10
 double fraction(int a,int b)
 {
@@ -42,6 +43,54 @@ int ecart_min(int tab[], int size)
     return(e_min);
 }
 
+//exo 14
+int len(char string[])
+{
+    int i=0;
+    for (i;string[i]!='\0';i+=1);
+    return(i);
+}
+int intfromstring(char string[], int n, bool i, int* pn)
+{
+    if (n<len(string))
+    {
+        int nb=0;
+        while(48<=(int)string[n] && (int)string[n]<=57)
+        {
+            nb*=10;
+            nb+=((int) string[n])-48;
+            n+=1;
+        }
+        if (i) *pn=n;
+        return(nb);
+    }
+    return(0);
+
+}
+int extraire(char string[])
+{
+    int n=0;
+    bool intnotfound=true;
+    while (intnotfound && (int)string[n]!=0)
+    {
+        if (string[n]=='-')
+        {
+            return(-intfromstring(string,n+1,false,&n));
+        }
+        if (48<=(int)string[n] && (int)string[n]<=57)
+        {
+            return(intfromstring(string,n,false,&n));
+        }
+        n+=1;
+
+    }
+    return(0);
+
+}
+
+//exo 15
+
+
 int main()
 {
     printf("[exo 10] \n");
@@ -65,7 +114,11 @@ int main()
     printf("f(x)=-2x^2+4x+8 evaluee en 42 : %f \n",evalue(deg_2,3,x));
 
     printf("\n[exo 13] \n");
-    
+    int tab[]={5,3,6,7,1,2};
+    printf("ecart minimum entre deux elements consecutifs de tab : %d \n",ecart_min(tab,6));
+
+    printf("\n[exo 14] \n");
+    printf("le premier entier dans la chaine \"lorem ipsum 42\" est : %d",extraire("lorem ipsum 42"));
 
     return(0);
 }
