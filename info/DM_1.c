@@ -65,6 +65,7 @@ int main()
     printf("f(x)=-2x^2+4x+8 evaluee en 42 : %f \n",evalue(deg_2,3,x));
 
     printf("\n[exo 13] \n");
+    
 
     return(0);
 }
