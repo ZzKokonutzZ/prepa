@@ -183,6 +183,65 @@ bool palindromeint(int nb)
     return(true);
 }
 
+//exo 18
+bool palindrome2(char string[])
+{
+    int l=len(string);
+    char* buffer=malloc(l*sizeof(char));
+    buffer[0]='\0';
+    int j=0;
+    for (int i=0;i<l;i+=1)
+    {
+        int c=(int) string[i];
+        if (97<=c && c<=122)
+        {
+            buffer[j]=(char) c;
+            j+=1;
+            buffer[j]='\0';
+        }
+
+        if (65<=c && c<=90)
+        {
+            buffer[j]=(char) c+32;
+            j+=1;
+            buffer[j]='\0';
+        }  
+    }
+    for (int i=0;i<(j-1)/2;i+=1)
+    {
+        if (buffer[i]!=buffer[j-1-i]) 
+        {
+            free(buffer);
+            return(false);
+        }
+    }
+    free(buffer);
+    return(true);
+
+}
+
+//exo 19
+int sommeentiers(char string[])
+{
+    int l=len(string);
+    int s=0;
+    int i=0;
+    while(i<l)
+    {
+        if (string[i]=='-')
+        {
+            s-=intfromstring(string,i+1,true,&i);
+        }
+
+        if (48<=(int)string[i] && (int)string[i]<=57)
+        {
+            s+=intfromstring(string,i,true,&i);
+        }
+        i+=1;
+    }
+    return(s);
+}
+
 int main()
 {
     printf("[exo 10] \n");
@@ -229,6 +288,19 @@ int main()
     printf("42188124 est un palindrome : %d \n",palindromeint(42188124));
     printf("4218124 est un palindrome : %d \n",palindromeint(4218124));
     printf("4218 est un palindrome : %d \n",palindromeint(4218));
+
+    printf("\n[exo 18] \n");
+    char c1[]="LoreM ipSum mUspi meRol";
+    printf("\"%s\" est un palindrome : %d \n",c1,palindrome2(c1));
+    char c2[]="lore_m  ip_sumus()pi me()rol";
+    printf("\"%s\" est un palindrome : %d \n",c2,palindrome2(c2));
+    char c3[]="lorem ipsum";
+    printf("\"%s\" est un palindrome : %d \n",c3,palindrome2(c3));
+
+    printf("\n[exo 19] \n");
+    char c4[]="42 lorem ipsum -18";
+    printf("somme des entiers dans \"%s\" : %d \n",c4,sommeentiers(c4));    
+
 
     return(0);
 }
