@@ -15,13 +15,13 @@ t = np.linspace(ti,tf,n) #s # temps en secondes
 V0 = [0,0]               #V # conditions initiales : [u(0), du(0)/dt]
 r=6 #Ohm, résistance interne du circuit
 C=10*10**-6 #Farad, capacité du condensateur
-L=1 #Henri, inductance de la bobine
+L=5 #Henri, inductance de la bobine
 E=12 #V, tension du générateur
 omega0 = 1/np.sqrt(L*C)   #s^-1 # pulsation propre
 Q=(1/r)*np.sqrt(L/C) #facteur de qualité
 q_0=-C*E #coulombs, charge maximale atteinte par le condensateur
 mu=omega0/(2*Q) #s^-1, inverse du temps caractéristique
-omega=omega0*np.sqrt(1-(1/(4*Q**2))) #s^-1, pulsation amortie
+omega=omega0*np.sqrt(1-(1/(4*Q**2))) #s^-1, pulsation propre de l'oscillateur amorti
 
 ###################################################
 # Fonctions associées à l'équation différentielle #
@@ -43,7 +43,8 @@ u = X[:,0]           # récupération des données
 #####################
 a=[]
 for i in range(len(t)) :
-    a+=[(-q_0*np.cos(omega*t[i])-mu*q_0*np.sin(omega*t[i]))*np.exp(-mu*t[i])+q_0]
+    #a+=[(-q_0*np.cos(omega*t[i])-mu*q_0*np.sin(omega*t[i]))*np.exp(-mu*t[i])+q_0]
+    a+=[q_0*(1-(np.cos(omega*t[i])+(mu*q_0/omega)*np.sin(omega*t[i]))*np.exp(-mu*t[i]))]
 
 ###################
 # Tracé graphique #
