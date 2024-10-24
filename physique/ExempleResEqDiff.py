@@ -8,20 +8,21 @@ from scipy.integrate import odeint
 # Paramètres #
 ##############
 ti = 0                #s   # bornes de l'intervalle de résolution
-tf = 5                #s   # en secondes
+tf = 50*10**-3                #s   # en secondes
 dt = 1e-3             #s   # pas de temps en secondes
 n  = int((tf-ti)/dt + 1) # nombre de points
 t = np.linspace(ti,tf,n) #s # temps en secondes
-V0 = [0,0]               #V # conditions initiales : [u(0), du(0)/dt]
+
 r=6 #Ohm, résistance interne du circuit
 C=10*10**-6 #Farad, capacité du condensateur
-L=5 #Henri, inductance de la bobine
+L=0.015 #Henri, inductance de la bobine
 E=12 #V, tension du générateur
 omega0 = 1/np.sqrt(L*C)   #s^-1 # pulsation propre
 Q=(1/r)*np.sqrt(L/C) #facteur de qualité
 q_0=-C*E #coulombs, charge maximale atteinte par le condensateur
 mu=omega0/(2*Q) #s^-1, inverse du temps caractéristique
 omega=omega0*np.sqrt(1-(1/(4*Q**2))) #s^-1, pulsation propre de l'oscillateur amorti
+V0 = [0,0 ]               #V # conditions initiales : [q(0), dq(0)/dt]
 
 ###################################################
 # Fonctions associées à l'équation différentielle #
