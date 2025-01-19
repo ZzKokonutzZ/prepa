@@ -1,0 +1,97 @@
+A1 : un invariant de structure est une proposition qui est vraie à la création d'une structure de données
+et qui reste vraie lorsque l'on y applique les opérations élémentaires de la structure. Exemples : la taille 
+et le type des éléments d'un tableau non redimentionnable, l'élément au sommet est le dernier élément ajouté dans une pile.
+
+A2 : un tableau redimentionnable est un tableau dont la taille peut varier. Les opérations élémentaire dont il est doté sont donc :
+-création du tableau
+-accès en lecture et en écriture à l'indice i en un temps constant
+-ajout d'un élément après le dernier indice avec un coût amorti constant
+-suppression du dernier élément avec un coût amorti constant
+
+implémentation usuelle : lors de la création d'un tableau redimentionnable de taille l,  on crée un tableau support vide de taille t
+usuellement initialisée à 2*l où seul les indices de 0 à l-1 sont autorisés. Lorsque l'on ajoute/retire un élément, un indice
+en plus/en moins est autorisé. Si l'on arrive au bout du tableau support, lors de l'ajout d'un nouvel élément on crée un nouveau tableau
+support de taille 2*t et on y recopie le contenu de l'ancien avant de remplacer ce dernier par le nouveau tableau support. Ainsi nous pouvons
+bien accéder en lecture/écriture à l'élément d'indice i et l'ajout/la suppression d'un élément se fait bien avec un coût amorti constant.
+
+A3 : Le hachage consiste à renvoyer un ensemble d'éléments de même type sur un ensemble d'entiers avec le moins de cas possibles où
+deux éléments sont associés au même entier. Cette idée sert entre autres à la construction de la structure du dictionnaire.
+
+B1 : un élément de type 'a option est soit un élément de type 'a soit None. Par exemple dans le code :
+type nbnan = int option;;
+
+un élément de type nbnan est soit un entier soit None.
+
+B2 : le tableau généré par cette expression contient trois copies du même tableau. Ainsi en modifier un revient à modifier les trois.
+Pour éviter ce problème il vaut mieux écrire :
+let a1 = Array.make 3 0 in
+let a3 = Array.make 3 0 in
+let a4 = Array.make 3 0 in
+let a = [|a1;a2;a3|];;
+
+B3 : lorsque l'on écrit let a = b;; il est impossible de changer la valeur assignée à a. En écrivant let mutable a = b;; 
+on peut assigner une nouvelle valeur c à a à l'aide de la syntaxe a <- c;;
+
+C1 : opérateurs de comparaison :
+== et != tests d'égalité et d'inégalité
+< et > inégalités strictes
+<= et >= inégalités larges
+
+opérateurs binaires :
+&& et
+|| ou
+! non
+
+C2 : 
+for (int i=0; i<n; i+=1)
+{
+	free(p[i]);
+}
+free(p);
+
+//gamma1 : 
+int findstr(char** tabc, int size)
+{
+	int imax = -1;
+	int maxlen = 0;
+	for (int i=0; i<size; i+=1)
+	{
+		int l = strlen(tabc[i]);
+		if (l > maxlen)
+		{
+			bool check = true;
+			for (int j=1; j<l; j+=1) check = check && tabc[i][j]>=tabc[i][j-1];
+			if (check) 
+			{
+				imax = i;
+				maxlen = l;
+			}
+		}
+	}
+	return imax;
+}
+
+//gamma2 :
+int* countsort(int* tab, int size)
+{
+	int* auxtab = malloc(size*sizeof(int*));
+	for (int i=0; i<size; i+=1)
+	{
+		auxtab[i] = 0;
+	}
+	for (int i=0; i<size; i+=1)
+	{
+		auxtab[tab[i]]+=1;
+	}
+    int k=0;
+    for (int i=0; i<size; i+=1)
+    {
+        for (int j=0; j<auxtab[i];j+=1)
+        {
+            tab[k]=i;
+            k+=1;
+        }
+    }
+    free(auxtab);
+    return tab;
+}

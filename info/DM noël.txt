@@ -1,0 +1,140 @@
+(* Erwan Mauduit, Corentin Schreck, Louison Cherubin-Jeanette *)
+let zip a1 a2=
+  if Array.length a1 <> Array.length a2 then failwith "Tableaux de tailles differentes";
+  Array.init (Array.length a1) (fun i -> (a1.(i), a2.(i)));;
+(* ---------------------------------------------------------- *)
+let tirette a1 = 
+  if Array.length a1 mod 2 = 1 then failwith "Tableaux d'indice non pair";
+  let taille = Array.length a1 / 2 in
+  Array.init (taille) (fun i -> a1.(i) + a1.(Array.length a1 -i -1));;
+(* ---------------------------------------------------------- *)
+let quarante_deux a1 =
+  let compteur = ref 0 in
+  let taille = Array.length a1 in
+  for i = 0 to taille-1  do
+    if i mod 42 = 0 && a1.(i) = 42 then 
+      compteur := !compteur +1;
+  done;
+  !compteur = 42;;
+(* ---------------------------------------------------------- *)
+let croissant a1 = 
+  let t = ref true in 
+  if Array.length a1 > 1 then for i = 1 to (Array.length a1)-1 do t:= !t && not (a1.(i-1) > a1.(i)) done;
+  !t;;
+(* ---------------------------------------------------------- *)
+let bitonique a1 =
+  let t = ref true in
+  let phase = ref 0 in 
+  if Array.length a1 > 1 then for i = 1 to (Array.length a1)-1 do if (!phase mod 2 = 0 && a1.(i-1) > a1.(i)) || (!phase mod 2 = 1 && a1.(i-1) < a1.(i)) then phase := !phase+1 ;
+      t:= (!phase < 2) && ( (!phase = 0 && not (a1.(i-1) > a1.(i)) )||(!phase = 1 && not (a1.(i-1) < a1.(i)) ) ) done;
+  !t;;
+(* ---------------------------------------------------------- *)
+let psrn a1 a2 =
+  if Array.length a1 <> Array.length a2 then failwith "wrong array size"
+  else let rep = ref 0 in for i = 0 to (Array.length a1)-1 do rep := !rep+a1.(i)*a2.(i) done ;
+    !rep;;
+(* ---------------------------------------------------------- *)
+let rotation a1 =
+  let size = (Array.length a1)-1 in
+  let e = a1.(0).(0) in
+  let newtab = Array.make_matrix (size+1) ( size+1) e in
+  for i = 0 to size do 
+    for j = 0 to size do newtab.(j).(size-i) <- a1.(i).(j) done 
+  done;
+  newtab;;
+(* ---------------------------------------------------------- *)  
+let plsci tableau =
+  if Array.length tableau = 0 then failwith("Empty array")
+  else
+    let max_length = ref 1 in
+    let max_index = ref 0 in
+    let length = ref 1 in
+    let index = ref 0 in
+    for i = 1 to Array.length tableau - 1 do
+      if tableau.(i) = tableau.(i - 1) then length := !length + 1
+      else (
+        (
+        if length > max_length then
+          (max_index := !index; max_length := !length)
+        );
+        (index := i; length := 1)
+        )
+    done;
+    if length > max_length then (max_index := !index; max_length := !length);
+    (!max_index, !max_length);;
+(* ---------------------------------------------------------- *)
+let count_012 tableau =
+  let rec auxiliaire index count0 count1 count2 =
+    if index = Array.length tableau then (count0, count1, count2)
+    else match tableau.(index) with
+    | 0 -> auxiliaire (index + 1) (count0 + 1) count1 count2
+    | 1 -> auxiliaire (index + 1) count0 (count1 + 1) count2
+    | 2 -> auxiliaire (index + 1) count0 count1 (count2 + 1)
+    | _ -> auxiliaire (index + 1) count0 count1 count2
+  in auxiliaire 0 0 0 0;;
+
+let rec fill tableau start count value =
+  if count > 0 then (
+    tableau.(start) <- value;
+    fill tableau (start + 1) (count - 1) value
+  );;
+
+let sorteren tableau =
+  let (count0, count1, count2) = count_012 tableau in
+  ignore( fill tableau 0 count0 0, fill tableau (count0) count1 1, fill tableau (count0 + count1) count2 2);;
+(* ---------------------------------------------------------- *)
+let count string character =
+  let counter = ref 0 in
+  for index = 0 to String.length string - 1 do
+    if string.[index] = character then counter := !counter + 1
+  done; !counter;;
+
+let maximum tableau =
+  let maximum = ref 0 in
+  for index = 0 to Array.length tableau - 1 do
+    if tableau.(index) > tableau.(!maximum) then
+      maximum := index
+  done; !maximum;;
+
+let dominant string =
+  let frequences = Array.make (String.length string) 0 in
+  for index = 0 to String.length string - 1 do
+    frequences.(index) <- count string string.[index]
+  done; string.[maximum frequences];;
+(* ---------------------------------------------------------- *)
+
+let tableau1 = [|8; 2; 13;4;5;65;7;8;9;10|];;
+let tableau2 = [|"un"; "deux";"trois";"quatre";"cinq";"six"; "sept";"huit";"neuf";"cache ou pas j'arrive"|];;
+let tableau3 = Array.init 1723 (fun i -> 42);; 
+let tableau4 = [|18|];;
+let tableau5 = [|1;2;4;5;7;8;9;42|];;
+let tableau6 = [|1;3;5;7;6;4;2;0|];;
+
+let tableau7= [| [|1;2;3|] ;
+                  [|4;5;6|] ;
+                  [|7;8;9|] |];;
+                
+let resultat1 = zip tableau1 tableau2 ;;
+
+let resultat2 = tirette tableau1;;
+
+let resultat3 = quarante_deux tableau3;;
+
+let resultat4 = croissant tableau1;;
+let resultat5 = croissant tableau4;;
+let resultat6 = croissant tableau5;;
+
+let resultat7 = bitonique tableau1;;
+let resultat8 = bitonique tableau4;;
+let resultat9 = bitonique tableau5;;
+let resultat10 = bitonique tableau6;;
+
+let resultat11 = psrn tableau5 tableau6;;
+
+let resultat12 = rotation tableau7;;
+
+let resultat13 = plsci [|1;3;3;8;9;9;5;6;5;5;7;9;2;6;5;1;5;7;5;6;9;6;0;9;7;9;1;9;6;6;8;8;7;8;1;1;4;8;4;7;1;5;4|];;
+
+let resultat14 = sorteren [|0;2;0;2;2;0;2;0;2;0;0;2;1;1;1;2;2|];;
+
+let resultat15 = dominant "Lorem ipsum dolor sit amet cras amet.";;
