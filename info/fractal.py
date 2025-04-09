@@ -56,7 +56,7 @@ def sierpinsky(n,size) :
             sierpinsky(n-1,size/2)
             turtle.forward(size/2)
             
-sierpinsky(5,100)
+dragon(15,5)
 
 turtle.update()
 turtle.exitonclick()
