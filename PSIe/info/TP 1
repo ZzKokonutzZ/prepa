@@ -1,0 +1,77 @@
+--1
+SELECT * from communes;
+select * from depts;
+
+--2
+select nom from communes where dep_id=8;
+
+--3
+select nom from communes where dep_id=8 intersect select nom from communes where population>=10;
+
+--4
+select * from (select nom from communes where dep_id=8 intersect select nom from communes where population>=10) order by nom ASC;
+
+--5
+select nom from (select nom,population from communes where dep_id=8 intersect select nom,population from communes where population>=10) order by population DESC;
+
+--6
+select * from (select * from communes where dep_id=8 intersect select * from communes where population>=10) order by population DESC;
+
+--7
+select nom,superficie from communes order by superficie desc limit 20 offset 100;
+
+--8
+select nom from communes where nom like 'AB%';
+
+--9
+select count(*) from communes;
+select count(*) from depts;
+
+--10
+select nom,avg(population) from communes where dep_id=6;
+
+--11
+select sum(population)*1000 from communes where dep_id=6;
+
+--12
+select min(altitude),max(altitude) from communes;
+
+--13
+select count(*) from (select distinct altitude from communes);
+
+--14
+select dep_id, sum(population) from communes group by dep_id;
+
+--15
+select dep_id, sum(population) from communes group by dep_id having sum(population)>=500 order by population desc;
+
+--16
+select depts.nom as departement,communes.nom as commune from depts join communes on dep_id=depts.id order by superficie desc limit 10;
+
+--17
+select communes.nom from depts join communes on chef_lieu=communes.id order by population asc limit 1;
+select communes.nom from depts join communes on chef_lieu=communes.id order by population desc limit 1;
+
+--18
+select avg(superficie) from(select * from communes join depts on dep_id=depts.id where depts.code='2A' or depts.code='2B');
+
+--19
+select depts.nom, sum(superficie) from depts join communes on dep_id=depts.id group by sum(superficie) order by sum(superficie);
+
+--20
+select nom, altitude from communes where altitude=(select max(altitude) from communes);
+
+--21
+select count(*) from communes where altitude>(select avg(altitude) from communes);
+
+--22
+select count(*) from communes where altitude =  (select round (avg(altitude)) from communes);
+
+--23
+select avg(surface)*0.01 from (select sum(superficie) as surface from communes join depts on dep_id=depts.id group by depts.nom);
+
+--24
+select departement, communes.nom from (select depts.nom as departement, chef_lieu from depts join communes on dep_id=depts.id group by depts.nom order by sum(population) limit 1) join communes on chef_lieu=communes.id;
+
+--25
+WITH alpes as (select * from communes join depts on dep_id=depts.id where dep_id=6) select 

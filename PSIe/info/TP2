@@ -1,0 +1,56 @@
+--1
+select name from circuits where location='Barcelona';
+
+--2
+select name from constructors where nationality='Japanese';
+
+--3
+select name from circuits where country='France' order by lat desc;
+
+--4
+select country, count(*) as nb from circuits group by country order by nb desc limit 1;
+
+--5
+select forename, surname, dob from drivers order by dob desc limit 1;
+
+--6
+select country from races join circuits on races.circuitId=circuits.circuitId where year=1966 order by round;
+
+--7
+select count(*) from results join drivers on results.driverId=drivers.driverId where forename='Ayrton' and surname='Senna' and grid=1;
+
+--8
+select sum(points) from results join drivers on results.driverId=drivers.driverId join races on races.raceId=results.raceId where forename='Ayrton' and surname='Senna' and year=1985;
+
+--9
+select circuits.name from races join circuits on races.circuitId=circuits.circuitId where races.name='French Grand Prix' and year=1967;
+
+--10
+select circuits.name,count(*) as nb from races join circuits on races.circuitId=circuits.circuitId where races.name='British Grand Prix' group by circuits.name order by nb desc limit 1;
+
+--11
+select circuits.name, date from races join circuits on races.circuitId=circuits.circuitId where races.name='Brazilian Grand Prix' order by date asc limit 1;
+
+--12
+select distinct constructors.name from results join drivers on results.driverId=drivers.driverId join constructors on results.constructorId=constructors.constructorId where drivers.forename='Alain' and drivers.surname='Prost';
+
+--13
+select distinct races.name from results join drivers on results.driverId=drivers.driverId join races on results.raceId=races.raceId where forename='Didier' and surname='Pironi' and position=1;
+
+--14
+select forename, surname, races.name, grid from results join drivers on results.driverId=drivers.driverId join races on results.raceId=races.raceId where position=1 order by grid desc limit 1;
+
+--15
+select forename, surname, races.name from results join drivers on results.driverId=drivers.driverId join races on results.raceId=races.raceId where strftime('%d%m',dob)=strftime('%d%m',date) and position=1;
+
+--16
+select forename, surname, sum(points) as score from results join drivers on results.driverId=drivers.driverId join races on results.raceId=races.raceId where year = 1976 group by forename, surname order by score desc limit 3;
+
+--17
+select constructors.name, sum(points) as score from results join constructors on results.constructorId= constructors.constructorId join races on results.raceId=races.raceId where year=2001 group by constructors.name order by score desc limit 3;
+
+--18
+select distinct drivers.forename,drivers.surname, pilotes.forename,pilotes.surname, drivers.dob from drivers join drivers as pilotes on drivers.dob=pilotes.dob where drivers.forename<pilotes.forename order by drivers.dob ;
+
+
+ 
