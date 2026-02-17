@@ -13,17 +13,17 @@ float calibration_factor = 700;
 
 void setup() {
   Serial.begin(115200);
-
-  ESC.attach(9);               // ATTACHER LE PIN ! important
-  ESC.writeMicroseconds(1000); // signal de sécurité
+  Serial.println("[OK]");
+  ESC.attach(9);               
+  ESC.writeMicroseconds(1000); 
 
   scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
   scale.set_scale(calibration_factor);
   scale.tare();
 
   delay(3000);   
-
   
+  Serial.println("[setup done]");
 
 
 }
@@ -38,7 +38,7 @@ void loop()
   if (Serial.read()=='s')
   {
     Serial.println("[START]");
-    for (command=1250;command<=2000;command+=10) 
+    for (command=1250;command<=1750;command+=10) 
     {
 
       ESC.writeMicroseconds(command);

@@ -1,9 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.stats import linregress
 
 ############################ initialisation #############################
 
-nbmesures=3 #nombre de fichiers donnees
+nbmesures=5 #nombre de fichiers donnees
 nbpoints=1 #nombre de points par échelon de commande
 
 mesures=[] #tableau des mesures du format [[[commandes],[valeurs mesurées]],[[commandes],[valeurs mesurées]],...]
@@ -28,7 +29,7 @@ for i in range(nbmesures) :
 plt.title("données brutes")
 plt.xlabel("commande")
 plt.ylabel("valeurs mesurées (UA)")
-plt.legend()
+#plt.legend()
 
 
 
@@ -37,7 +38,7 @@ plt.legend()
 
 seuil=1750 #à confirmer au stroboscope
 
-imax=mesures[1][0].index(seuil)
+imax=mesures[1][0].index(seuil)+1
 
 
 
@@ -45,10 +46,12 @@ for i in range(nbmesures) :
     while len(mesures[i][0])>imax :
         mesures[i][0].pop(-1)
         mesures[i][1].pop(-1)
-
+for e in mesures :
+    print(e)
+    print()
 commande_ref=np.array(mesures[1][0][:])
 
-coef_etalonnage=900*0.001*9.81/mesures[0][1][-1] #à définir expérimentalement
+coef_etalonnage=2.114374434249408e-05 #à définir expérimentalement
 
 for i in range(nbmesures) :
     a=mesures[i][1][0]
@@ -62,13 +65,14 @@ for i in range(nbmesures) :
 plt.title("données redressées et tronquées")
 plt.xlabel("commande")
 plt.ylabel("valeurs mesurées (N)")
-plt.legend()
+#plt.legend()
 
 
     ### I : élimination des valeurs abherrantes ###
 
 #calcul de la moyenne et de l'écart-type
 mesure_moyenne=[]
+m=0
 for i in range(imax) :
     m=sum([mesures[k][1][i] for k in range(nbmesures)])/nbmesures
     mesure_moyenne.append(m)
@@ -83,7 +87,7 @@ modele_brut=np.array([a*commande_ref[i]**2+b*commande_ref[i]+c for i in range(im
 
 
 #élimination des valeurs abherrantes
-coef_abherration=0.8
+coef_abherration=3
 
 plt.figure(2)
 for i in range(nbmesures) :
@@ -108,20 +112,21 @@ for i in range(nbmesures) :
 plt.title("valeurs abherrantes")
 plt.ylabel("force (N)")
 plt.xlabel("commande")
-plt.legend()
+#plt.legend()
 
     ### II détermination des modèles linéaires et quadratiques sur les données traitées ###
-
 #moyenne des mesures filtrées
 mesuref_moyenne=[]
 for i in range(imax) :
     m=0
     nb=0
     for j in range(nbmesures) :
+        print(f'mesures {j} : {mesures[j][0]}')
         if commande_ref[i] in mesures[j][0] :
             i_commande=mesures[j][0].index(commande_ref[i])
             m+=mesures[j][1][i_commande]
             nb+=1
+    assert nb>0, f"commande_ref : {commande_ref[i]}"
     mesuref_moyenne.append(m/nb)
 mesuref_moyenne=np.array(mesuref_moyenne)
 
@@ -145,7 +150,7 @@ plt.title('modèles quadratiques et linéaires')
 
 plt.xlabel('commande')
 plt.ylabel('force (N)')
-plt.legend()
+#plt.legend()
 
 plt.figure(4)
 plt.title('écarts au modèle')
@@ -170,9 +175,23 @@ ax2.plot(commande_ref,np.zeros(len(commande_ref)),color='red')
 ax2.set_xlabel('commande')
 ax2.set_ylabel('force (N)')
 
-plt.legend()
+#plt.legend()
 
+commande_lin=commande_ref[:]
+mesure_lin=a*commande_ref[:]*commande_ref[:]+b*commande_ref[:]+c
+r=0
+n_min=len(commande_lin)
+while r<0.99 and len(commande_lin)!=0 :
+    commande_lin=commande_lin[:-1]
+    mesure_lin=mesure_lin[:-1]
+    n_min-=1
+    a_lin,b_lin,r,trash1,trash2=linregress(commande_lin,mesure_lin)
+print(n_min)
 
-
-
+if len(commande_lin) ==0 :
+    print('dommage...')
+else :
+    plt.figure(6)
+    plt.plot(commande_lin,mesure_lin,'+')
+    plt.plot(commande_lin,a_lin*commande_lin+b_lin)
 plt.show()
