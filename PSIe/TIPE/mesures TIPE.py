@@ -54,9 +54,8 @@ commande_ref=np.array(mesures[1][0][:])
 coef_etalonnage=2.114374434249408e-05 #à définir expérimentalement
 
 for i in range(nbmesures) :
-    a=mesures[i][1][0]
     for j in range(imax) :
-        mesures[i][1][j]=coef_etalonnage*(mesures[i][1][j]-a)
+        mesures[i][1][j]=coef_etalonnage*(mesures[i][1][j]-5.607133674736671)
 
 plt.figure(1)
 for i in range(nbmesures) :
@@ -143,6 +142,9 @@ plt.plot(commande_ref,k*commande_ref+N0,color='blue',label='modèle linéaire')
 
 #modèle quadratique :
 a,b,c=np.polyfit(commande_ref,mesuref_moyenne,2)
+print(a)
+print(b)
+print(c)
 plt.plot(commande_ref,a*commande_ref*commande_ref+b*commande_ref+c,color='red',label='modèle quadratique')
 
 plt.title('modèles quadratiques et linéaires')
